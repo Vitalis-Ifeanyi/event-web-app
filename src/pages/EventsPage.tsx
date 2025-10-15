@@ -4,7 +4,15 @@ import EventCard from "../component/EventCard";
 import SearchBar from "../component/SearchBar";
 import { Loader2 } from "lucide-react";
 
-const EventsPage=()=> {
+interface Event {
+  id: number;
+  title: string;
+  date: string;
+  location: string;
+  petsAllowed: boolean;
+}
+
+const EventsPage = () => {
   const { data: events = [], isLoading, isError } = useEvents();
   const [search, setSearch] = useState("");
   const [petsFilter, setPetsFilter] = useState<
@@ -14,8 +22,10 @@ const EventsPage=()=> {
   const perPage = 5;
 
   const filtered = events
-    .filter((e) => (e.title || "").toLowerCase().includes(search.toLowerCase()))
-    .filter((e) => {
+    .filter((e: Event) =>
+      (e.title || "").toLowerCase().includes(search.toLowerCase())
+    )
+    .filter((e: Event) => {
       if (petsFilter === "allowed") return e.petsAllowed;
       if (petsFilter === "notAllowed") return !e.petsAllowed;
       return true;
@@ -62,7 +72,7 @@ const EventsPage=()=> {
             onChange={(e) =>
               setPetsFilter(e.target.value as "all" | "allowed" | "notAllowed")
             }
-            className="p-2 rounded bg-black/30 text-gray-200 focus:outline-none focus:ring-1 focus:ring-white"
+            className="p-2 rounded bg-black/30 text-gray-200 border border-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
           >
             <option value="all">All Events</option>
             <option value="allowed">Pets Allowed</option>
@@ -76,7 +86,7 @@ const EventsPage=()=> {
           </p>
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
-            {paginated.map((event) => (
+            {paginated.map((event: Event) => (
               <EventCard
                 key={event.id}
                 id={event.id}
@@ -113,5 +123,5 @@ const EventsPage=()=> {
       </div>
     </div>
   );
-}
-export default EventsPage
+};
+export default EventsPage;
